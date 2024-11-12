@@ -25,6 +25,7 @@ public class AlumnoController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     ResponseEntity<AlumnoMateria> findAll(){
         List<Alumno> alumnos = alumnoService.findAll();
         AlumnoMateria alumnoMateria = new AlumnoMateria(alumnos);

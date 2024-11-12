@@ -1,15 +1,17 @@
 package com.edutecno.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@Table(name = "alumnos")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "alumnos")
 @Entity
 public class Alumno {
 
@@ -23,6 +25,7 @@ public class Alumno {
 
     private String direccion;
 
-    @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
-    private Set<Materia> materiaList = new HashSet<>();
+    @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Materia> materiaList;
+
 }

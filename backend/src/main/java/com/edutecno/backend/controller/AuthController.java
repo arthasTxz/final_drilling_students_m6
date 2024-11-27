@@ -6,6 +6,7 @@ import com.edutecno.backend.dto.UserRegisterDto;
 import com.edutecno.backend.model.User;
 import com.edutecno.backend.service.UserService;
 import com.edutecno.backend.service.UserServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +27,12 @@ public class AuthController {
 
     @GetMapping
     public ResponseEntity<String> sigOut(){
-
         return ResponseEntity.ok("Todo bien");
     }
 
     @PostMapping
     public ResponseEntity<User> signUp(@RequestBody UserRegisterDto userRegisterDto){
-        return ResponseEntity.ok(userService.signUp(userRegisterDto));
+        User user = userService.signUp(userRegisterDto);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }

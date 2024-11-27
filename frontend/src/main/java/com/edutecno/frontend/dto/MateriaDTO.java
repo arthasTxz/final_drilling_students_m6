@@ -1,8 +1,10 @@
 package com.edutecno.frontend.dto;
 
+import java.util.Set;
+
 public record MateriaDTO(
         Long id,
         String nombre,
-        AlumnoDTO alumno
+        Set<AlumnoMateriaDto> alumnos
 ) {
 }

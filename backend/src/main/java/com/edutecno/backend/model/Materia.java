@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,11 +18,16 @@ public class Materia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String nombre;
 
-    @ManyToOne
-    @JoinColumn(name = "alumno_id")
-    @JsonIgnore
-    private Alumno alumno;
+
+    @ManyToMany
+    @JoinTable(
+            name = "materia_alumno",
+            joinColumns = @JoinColumn(name = "materias_id"),
+            inverseJoinColumns = @JoinColumn(name = "alumnos_id")
+    )
+    private Set<Alumno> alumnos;
 
 }

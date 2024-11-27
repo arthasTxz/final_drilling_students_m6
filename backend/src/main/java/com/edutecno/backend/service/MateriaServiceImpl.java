@@ -22,12 +22,10 @@ public class MateriaServiceImpl implements MateriaService {
     }
 
     @Override
-    public void save(MateriaCreateRequest materiaRequest) {
-        Alumno alumno = alumnoRepository.findById(materiaRequest.alumnoId()).orElseThrow(() -> new RuntimeException("Alumno not found"));
+    public Materia save(MateriaCreateRequest materiaRequest) {
         Materia materia = new Materia();
-        materia.setAlumno(alumno);
         materia.setNombre(materiaRequest.nombre());
-        materiaRepository.save(materia);
+        return materiaRepository.save(materia);
 //        alumno.getMateriaList().add(materia);
     }
 }

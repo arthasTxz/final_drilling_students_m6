@@ -1,7 +1,6 @@
 package com.edutecno.backend.controller;
 
-import com.edutecno.backend.dto.AlumnoCreateRequest;
-import com.edutecno.backend.dto.AlumnoMateria;
+import com.edutecno.backend.dto.*;
 import com.edutecno.backend.model.Alumno;
 import com.edutecno.backend.model.Materia;
 import com.edutecno.backend.repository.MateriaRepository;
@@ -25,7 +24,6 @@ public class AlumnoController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     ResponseEntity<AlumnoMateria> findAll(){
         List<Alumno> alumnos = alumnoService.findAll();
         AlumnoMateria alumnoMateria = new AlumnoMateria(alumnos);
@@ -33,9 +31,21 @@ public class AlumnoController {
     }
 
     @GetMapping("/{alumnoId}")
-    ResponseEntity<List<Materia>> findByAlumno(@PathVariable Long alumnoId){
-        List<Materia> materias = materiaRepository.findByAlumnoId(alumnoId);
-        return ResponseEntity.ok().body(materias);
+    ResponseEntity<?> findByAlumno(@PathVariable Long alumnoId){
+        return ResponseEntity.ok().body(alumnoService.findById(alumnoId));
+    }
+
+    @GetMapping("/materias/{alumnoId}")
+    ResponseEntity<MateriasByAlumno> findMateriasByAlumno(@PathVariable Long alumnoId){
+        List<Materia> materias = materiaRepository.findByAlumnosId(alumnoId);
+        MateriasByAlumno materiasByAlumno = new MateriasByAlumno(materias);
+        return ResponseEntity.ok().body(materiasByAlumno);
+    }
+
+    @PostMapping("/materias")
+    ResponseEntity<?> findByAlumnoId(@RequestBody AddMateriaToAlumno addMateriaToAlumno){
+        AlumnoDto alumno = alumnoService.update(addMateriaToAlumno);
+        return ResponseEntity.ok().body(alumno);
     }
 
     @PostMapping

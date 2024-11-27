@@ -1,5 +1,6 @@
 package com.edutecno.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,13 +20,16 @@ public class Alumno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    @JsonIgnore
     private String rut;
 
     private String nombre;
 
     private String direccion;
 
-    @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "alumnos")
+    @JsonIgnore
     private Set<Materia> materiaList;
 
 }

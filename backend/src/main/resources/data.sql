@@ -8,11 +8,21 @@ VALUES
     ( '56789012-3', 'Pedro Martínez', 'Calle Principal 111, Valparaíso');
 
 -- Inserta datos en la tabla materias (suponiendo que Materia tiene campos id y nombre)
-INSERT INTO materias ( nombre, alumno_id)
+INSERT INTO materias ( nombre)
 VALUES
-    ('Matemáticas', 1),
-    ( 'Historia', 1),
-    ( 'Ciencias', 2),
-    ( 'Física', 3),
-    ( 'Química', 4),
-    ( 'Inglés', 5)
+    ('Matemáticas'),
+    ( 'Historia'),
+    ( 'Ciencias'),
+    ( 'Física'),
+    ( 'Química'),
+    ( 'Inglés');
+
+INSERT INTO materia_alumno (alumnos_id, materias_id)
+VALUES
+    (1, 1),
+    (1, 2),
+    (2, 3),
+    (2, 5),
+    (3, 1),
+    (4, 1),
+    (5, 6);

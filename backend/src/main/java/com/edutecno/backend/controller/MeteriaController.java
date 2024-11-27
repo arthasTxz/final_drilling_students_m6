@@ -1,9 +1,12 @@
 package com.edutecno.backend.controller;
 
 import com.edutecno.backend.dto.MateriaCreateRequest;
+import com.edutecno.backend.dto.MateriaWrapper;
 import com.edutecno.backend.model.Materia;
 import com.edutecno.backend.repository.MateriaRepository;
 import com.edutecno.backend.service.MateriaService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +25,15 @@ public class MeteriaController {
     }
 
     @GetMapping
-    public List<Materia> getAllMaterias() {
-        return materiaRepository.findAll();
+    public ResponseEntity<MateriaWrapper> getAllMaterias() {
+        List<Materia> materias = materiaRepository.findAll();
+        return ResponseEntity.ok(new MateriaWrapper(materias));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public void save(@RequestBody MateriaCreateRequest materia) {
-        materiaService.save(materia);
+    public ResponseEntity<Materia> save(@RequestBody MateriaCreateRequest materia) {
+        Materia newMateria = materiaService.save(materia);
+        return new ResponseEntity<>(newMateria, HttpStatus.CREATED);
     }
 }

@@ -1,12 +1,8 @@
 package com.edutecno.backend.dto;
 
-import com.edutecno.backend.model.Role;
-
-import java.util.List;
-
 public record UserDto(
+        String name,
         String username,
-        String password,
-        List<Role> roles
+        String email
 ) {
 }

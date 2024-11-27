@@ -31,7 +31,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (roleRepository.count() == 0) {
             Role role_user = new Role();
-            role_user.setName(AuthorityEnum.valueOf(AuthorityEnum.ROLE_USER.name()));
+            role_user.setName(AuthorityEnum.valueOf(AuthorityEnum.ROLE_CLIENT.name()));
             Role role_admin = new Role();
             role_admin.setName(AuthorityEnum.valueOf(AuthorityEnum.ROLE_ADMIN.name()));
             roleRepository.save(role_user);

@@ -21,9 +21,11 @@ public class JwtUtils {
         String body = new String(decoder.decode(chunks[1]));
         Map<String,String> claims = new HashMap<>();
         Map json = stringToMap(body);
-        System.out.println(json);
+        System.out.println(json.get("role"));
         claims.put("token",header);
         claims.put("body",body);
+        claims.put("username", (String) json.get("username"));
+        claims.put("role", (String) json.get("role"));
         return claims;
     }
 

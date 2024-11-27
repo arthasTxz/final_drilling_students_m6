@@ -24,8 +24,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //        List<String> roles = user.getRoles().getAuthorities().stream()
 //                .map(GrantedAuthority::getAuthority).toList();
         // Lo importante que es esto, OJO, setear el enabled a true si no, no funciona
+
+        System.out.println("Lo encontro " + user);
         user.setEnabled(true);
-        System.out.println("Lo encontro " + user.getPassword());
         return UserDetailsImpl.build(user);
     }
 }

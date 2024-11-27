@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 
 public interface MateriaService {
 
-    void save(MateriaCreateRequest materiaRequest);
+    Materia save(MateriaCreateRequest materiaRequest);
 }

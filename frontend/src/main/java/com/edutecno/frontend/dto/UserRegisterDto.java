@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Alumno {
-    private Long id;
-    private String nombre;
-    private String direccion;
-    private int edad;
+public class UserRegisterDto {
+    private String name;
+    private String username;
+    private String password;
+    private String email;
 
 }

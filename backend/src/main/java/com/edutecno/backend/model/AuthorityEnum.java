@@ -1,6 +1,6 @@
 package com.edutecno.backend.model;
 
 public enum AuthorityEnum {
-    ROLE_USER,
+    ROLE_CLIENT,
     ROLE_ADMIN
 }

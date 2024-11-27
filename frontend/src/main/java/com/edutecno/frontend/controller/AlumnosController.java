@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -57,9 +58,18 @@ public class AlumnosController {
     }
 
     @PostMapping("/materias")
-    public String addMateriaToAlumno(@ModelAttribute AddMateriaToAlumno addMateriaToAlumno){
+    public String addMateriaToAlumno(@ModelAttribute AddMateriaToAlumno addMateriaToAlumno, RedirectAttributes redirectAttributes){
 
-        ResponseEntity<?> alumnoDTO = alumnoService.addMateriaToAlumno(userService.getToken(), addMateriaToAlumno);
-        return "redirect:/home";
+        ResponseEntity<?> response = alumnoService.addMateriaToAlumno(userService.getToken(), addMateriaToAlumno);
+        if (response.getStatusCode() == HttpStatus.CREATED){
+            return "redirect:/home";
+        } else if (response.getStatusCode() == HttpStatus.CONFLICT) {
+            System.out.println("Conflict");
+            redirectAttributes.addFlashAttribute("errorMessage", (String) response.getBody());
+            return "redirect:/alumnos/materias/" + addMateriaToAlumno.getAlumnoId();
+        } else {
+            return "redirect:/home";
+        }
+
     }
 }

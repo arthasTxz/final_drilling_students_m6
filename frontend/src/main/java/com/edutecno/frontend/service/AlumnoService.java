@@ -3,6 +3,7 @@ package com.edutecno.frontend.service;
 import com.edutecno.frontend.dto.*;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -41,13 +42,28 @@ public class AlumnoService {
     }
 
     public ResponseEntity<?> addMateriaToAlumno(String token, AddMateriaToAlumno addMateriaToAlumno){
-
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         String url = "http://localhost:8080/api/v1/alumnos/materias";
         HttpEntity<AddMateriaToAlumno> request = new HttpEntity<>(addMateriaToAlumno, headers);
-        ResponseEntity<AlumnoDTO> response = restTemplate.exchange(url, HttpMethod.POST, request, AlumnoDTO.class);
-        return response;
+        try{
+            ResponseEntity<AlumnoDTO> response = restTemplate.exchange(
+                    url, HttpMethod.POST, request, AlumnoDTO.class);
+            return ResponseEntity.ok(response.getBody());
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.CONFLICT) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("La materia ya ha sido asignada.");
+            } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta.");
+            } else {
+                // Otros errores genéricos
+                return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
+            }
+        }  catch (Exception e) {
+        // Manejo genérico de excepciones
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor.");
+    }
+
     }
 }

@@ -3,6 +3,7 @@ package com.edutecno.backend.service;
 import com.edutecno.backend.dto.AddMateriaToAlumno;
 import com.edutecno.backend.dto.AlumnoCreateRequest;
 import com.edutecno.backend.dto.AlumnoDto;
+import com.edutecno.backend.exception.MateriaYaAsignada;
 import com.edutecno.backend.model.Alumno;
 import com.edutecno.backend.model.Materia;
 import com.edutecno.backend.repository.AlumnoRepository;
@@ -62,6 +63,9 @@ public class AlumnoServiceImpl implements AlumnoService{
         Alumno alumno = alumnoRepository.findById(alummnoMateria.alumnoId()).orElse(null);
         Materia materia = materiaRepository.findById(alummnoMateria.materiaId()).orElse(null);
         assert alumno != null;
+        if (alumno.getMateriaList().contains(materia)){
+            throw new MateriaYaAsignada("La materia ya ha sido asignada al alumno");
+        }
         alumno.getMateriaList().add(materia);
         assert materia != null;
         materia.getAlumnos().add(alumno);

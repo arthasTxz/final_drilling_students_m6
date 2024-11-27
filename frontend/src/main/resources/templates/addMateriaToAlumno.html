@@ -48,6 +48,9 @@
                     </div>
                 </div>
             </form>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
         </div>
     </div>
 </div>

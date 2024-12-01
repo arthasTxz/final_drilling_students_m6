@@ -5,10 +5,10 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copiar el JAR generado al contenedor
-COPY target/frontend-0.0.1-SNAPSHOT.jar /app/backend.jar
+COPY target/backend-0.0.1-SNAPSHOT.jar /app/backend.jar
 
 # Exponer el puerto donde corre el backend
-EXPOSE 8081
+EXPOSE 8080
 
 # Ejecutar el JAR
 ENTRYPOINT ["java", "-jar", "/app/backend.jar"]

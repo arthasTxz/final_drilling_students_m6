@@ -2,6 +2,8 @@ package com.edutecno.frontend.service;
 
 import com.edutecno.frontend.dto.*;
 import org.apache.tomcat.util.http.parser.Cookie;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -13,24 +15,28 @@ import java.util.List;
 @Service
 public class UserService {
 
+    @Value("${base.path.url}")
+    private String basePath;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     private String token;
     private String auth;
     private String username;
 
     public ResponseEntity<AlumnoWrapper> findAll(){
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(token);
         HttpEntity<String> httpEntity = new HttpEntity<>("headers", headers);
-        ResponseEntity<AlumnoWrapper> alumnoWrapper = restTemplate.exchange("http://localhost:8080/api/v1/alumnos", HttpMethod.GET, httpEntity, AlumnoWrapper.class);
+        ResponseEntity<AlumnoWrapper> alumnoWrapper = restTemplate.exchange( basePath+ "/alumnos", HttpMethod.GET, httpEntity, AlumnoWrapper.class);
         return alumnoWrapper;
     }
 
     public ResponseEntity<UserDTO> signUp(UserRegisterDto userRegisterDto){
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/api/v1/auth";
+        String url = basePath + "/auth";
         HttpEntity<UserRegisterDto> request = new HttpEntity<>(userRegisterDto);
         ResponseEntity<UserDTO> response = restTemplate.exchange(url, HttpMethod.POST,request, UserDTO.class);
         return response;
@@ -39,9 +45,7 @@ public class UserService {
 
 
     public LoginResponse login(String username, String password) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/api/v1/auth/signIn";
-
+        String url = basePath + "/auth/signIn";
         LoginRequest loginRequest = new LoginRequest(username, password);
         try {
             // Intentar autenticarse

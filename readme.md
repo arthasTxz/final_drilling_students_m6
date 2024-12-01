@@ -1,144 +1,123 @@
-# HITO 1 (BACKEND)
 
-## Generación del Proyecto
-- Usar **Spring Initializr** para generar el proyecto con las dependencias necesarias.
-- Crear modelos en la carpeta `models` para que persistan en la base de datos.
-
-## Modelos
-
-1. **Clase Alumno** con los siguientes atributos:
-   - `Id` de tipo `Long`
-   - `Rut` de tipo `String`
-   - `Nombre` de tipo `String`
-   - `Dirección` de tipo `String`
-   - `materiaList` de tipo `Set<Materia>`
-
-2. **Clase Materia** con los siguientes atributos:
-   - `Id` de tipo `Long`
-   - `Nombre` de tipo `String`
-   - `Alumno` de tipo `Alumno`
-
-> **Nota:** Implementar un **Logger** dentro de la creación del proyecto. La ubicación y forma del Logger es de libre elección.
-
-## Repositorios
-
-- Crear interfaces que implementen `JpaRepository` en la carpeta `repository`.
-  1. Interfaz `AlumnoRepository`.
-  2. Interfaz `MateriaRepository`.
-
-## Servicios
-
-1. **Clase AlumnoService**
-   - Método `save` para guardar un alumno.
-   - Método `findAll` para obtener todos los registros de alumnos.
-
-2. **Clase MateriaService**
-   - Método `save` para guardar una materia.
-
-## Controladores
-
-1. **Clase AlumnoController**
-   - Método `findAll` para obtener todos los alumnos.
-   - Método `save` para guardar un alumno.
-
-2. **Clase MateriaController**
-   - Método `save` para crear una materia.
-
-
-   
-# JWT
-
-## Configuración Inicial
-- Agregar las dependencias de **Spring Security** y **jsonwebtoken.io** a Maven.
-- Definir la **clave** y el **tiempo de expiración del token** en el archivo `application.yml` dentro de la carpeta `resources`.
-
-## Modelos
-
-1. **Clase User** con los siguientes atributos:
-   - `Id` de tipo `Long`
-   - `Name` de tipo `String`
-   - `Username` de tipo `String`
-   - `Email` de tipo `String`
-   - `Roles` de tipo `List<Role>`
-
-2. **Enumeración Role**
-   ```java
-   public enum Role implements GrantedAuthority {
-       ROLE_ADMIN, ROLE_CLIENT;
-       public String getAuthority() {
-           return name();
-       }
-   }
-   ```
-
-## Repositorio y Excepciones
-
-- Crear la interfaz `UserRepository` que implemente `JpaRepository`.
-- Crear una excepción que extienda `RuntimeException` para manejar excepciones personalizadas.
-
-## Clases de Seguridad
-
-- Crear las clases necesarias para la verificación y generación de tokens en la carpeta `security`:
-   1. **Clase JwtTokenProvider**.
-   2. **Clase JwtTokenFilter**.
-   3. **Clase JwtTokenFilterConfigurer**.
-
-## Configuración de Seguridad
-
-- Crear la clase `WebSecurityConfig`, que extiende de `WebSecurityConfigurerAdapter` para asegurar la aplicación.
-
-## Servicio de Usuario
-
-- Crear la clase `UserService` con los siguientes métodos:
-   1. **signin**: Autenticar usuario.
-   2. **signup**: Registrar usuario.
-   3. **loadUserByUsername**: Verificar los atributos del usuario.
-
-## Controlador de Usuario
-
-- Crear la clase `UserController` para exponer los endpoints:
-   1. Método **signup** para registro de usuarios.
-   2. Método **signin** para login de usuarios, retornando un token.
 
 ---
 
-# HITO 2 (FRONTEND)
+# Proyecto Spring Boot (Frontend y Backend) con Docker
 
-## Generación del Proyecto
+Este proyecto consiste en dos aplicaciones Spring Boot (frontend y backend) y una base de datos PostgreSQL, todas contenidas en contenedores Docker mediante Docker Compose.
 
-- Usar **Spring Initializr** para generar el proyecto con las dependencias necesarias para la aplicación web.
+## Prerrequisitos
 
-## Data Transfer Objects (DTOs)
+Asegúrate de tener instalados los siguientes programas:
 
-1. **Clase AlumnoDTO** con los siguientes atributos:
-   - `Id` de tipo `Long`
-   - `Rut` de tipo `String`
-   - `Nombre` de tipo `String`
-   - `Dirección` de tipo `String`
-   - `materiaList` de tipo `Set<Materia>`
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Java 17+](https://adoptopenjdk.net/) (o la versión requerida por el proyecto)
+- [Maven](https://maven.apache.org/)
 
-2. **Clase MateriaDTO** con los siguientes atributos:
-   - `Id` de tipo `Long`
-   - `Nombre` de tipo `String`
-   - `Alumno` de tipo `Alumno`
+## Configuración del Proyecto
 
-3. **Clase UserDTO** con los siguientes atributos:
-   - `Username` de tipo `String`
-   - `Password` de tipo `String`
-   - `Roles` de tipo `List<Role>`
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/arthasTxz/final_drilling_students_m6.git
+   cd proyecto
+   ```
 
-## Servicios
+2. **Generar los archivos `.jar`** para frontend y backend:
+   ```bash
+   # Para el backend
+   cd backend
+   mvn clean package
+   cd ..
 
-1. **Clase AlumnoService**
-   - Método `findAll`, que consume el servicio REST del Backend.
+   # Para el frontend
+   cd frontend
+   mvn clean package
+   cd ..
+   ```
 
-2. **Clase UserService**
-   - Método `signin`, que envía los datos del usuario para iniciar sesión en el frontend.
+   Los archivos `.jar` se generarán en las carpetas `target`:
+    - **Backend**: `backend/target/backend-0.0.1-SNAPSHOT.jar`
+    - **Frontend**: `frontend/target/frontend-0.0.1-SNAPSHOT.jar`
 
-## Controlador de Login
+3. **Verificar los `Dockerfile`:**
+   Asegúrate de que los `Dockerfile` de backend y frontend estén configurados correctamente para copiar los `.jar` generados.
 
-- Crear la clase `LoginController` con los siguientes métodos:
-   1. **login**: Muestra la vista de login.
-   2. **home**: Muestra los datos obtenidos desde el servicio de Alumnos.
+   Ejemplo para el backend:
+   ```dockerfile
+   COPY target/backend-0.0.1-SNAPSHOT.jar /app/backend.jar
+   ```
+
+## Inicializar el Proyecto
+
+Para construir y ejecutar los contenedores:
+
+```bash
+docker-compose up --build
 ```
 
+Esto hará lo siguiente:
+- Creará y ejecutará contenedores para `db`, `backend` y `frontend`.
+- Establecerá conexiones entre los servicios a través de la red `app-network`.
+
+### Acceso a las Aplicaciones
+
+- **Frontend**: [http://localhost:8081](http://localhost:8081)
+- **Backend**: [http://localhost:8080](http://localhost:8080)
+
+### Base de Datos PostgreSQL
+
+La base de datos PostgreSQL se ejecutará en el contenedor `db` con los siguientes parámetros:
+- **Base de datos**: `mydatabase`
+- **Usuario**: `myuser`
+- **Contraseña**: `secret`
+- **Puerto en host**: `5433` (mapeado a `5432` en el contenedor)
+
+Para conectarte a la base de datos desde tu máquina local:
+```bash
+psql -h localhost -p 5433 -U myuser -d mydatabase
+```
+
+## Variables de Entorno
+
+Las aplicaciones están configuradas para usar un perfil `prod`. Puedes personalizar variables de entorno en `docker-compose.yml`.
+
+Ejemplo:
+```yaml
+environment:
+  - SPRING_PROFILES_ACTIVE=prod
+```
+
+## Comandos Útiles
+
+- **Detener los contenedores:**
+  ```bash
+  docker-compose down
+  ```
+
+- **Ver logs en tiempo real:**
+  ```bash
+  docker-compose logs -f
+  ```
+
+- **Reconstruir las imágenes:**
+  ```bash
+  docker-compose up --build
+  ```
+
+## Posibles Problemas y Soluciones
+
+1. **Error de conexión: `Connection Refused`**
+    - Asegúrate de que los servicios `backend` y `frontend` estén en la misma red `app-network`.
+    - Verifica que los puertos no estén ocupados.
+
+2. **Puertos en uso**
+    - Si los puertos `8080`, `8081` o `5433` están ocupados, cambia los mapeos en `docker-compose.yml`:
+      ```yaml
+      ports:
+        - "8082:8080"  # Cambiar el puerto del host
+      ```
+
+---
+
+¿Necesitas algún ajuste adicional o más detalles en este `README.md`?

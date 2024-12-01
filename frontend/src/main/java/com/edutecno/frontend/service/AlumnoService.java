@@ -1,6 +1,8 @@
 package com.edutecno.frontend.service;
 
 import com.edutecno.frontend.dto.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -11,41 +13,45 @@ import java.util.Collections;
 @Service
 public class AlumnoService {
 
+    @Value("${base.path.url}")
+    private String basePath;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     public ResponseEntity<MateriasWrapper> findAllMateriasByAlumnoId(String token, Long alumnoId){
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(token);
         HttpEntity<String> httpEntity = new HttpEntity<>("headers", headers);
-        ResponseEntity<MateriasWrapper> materias = restTemplate.exchange("http://localhost:8080/api/v1/alumnos/materias/" + alumnoId, HttpMethod.GET, httpEntity, MateriasWrapper.class);
+        ResponseEntity<MateriasWrapper> materias = restTemplate.exchange("http://backend:8080/api/v1/alumnos/materias/" + alumnoId, HttpMethod.GET, httpEntity, MateriasWrapper.class);
         return materias;
     }
 
     public ResponseEntity<String> createAlumno(String token, AlumnoRegisterDto alumnoRegisterDto){
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
-        String url = "http://localhost:8080/api/v1/alumnos";
+        String url = basePath + "/alumnos";
         HttpEntity<AlumnoRegisterDto> request = new HttpEntity<>(alumnoRegisterDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
         return response;
     }
 
     public ResponseEntity<AlumnoDTO> findAlumnoById(String token, Long alumnoId){
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
+        String url = basePath + "/alumnos/" + alumnoId;
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(token);
         HttpEntity<String> httpEntity = new HttpEntity<>("headers", headers);
-        ResponseEntity<AlumnoDTO> response = restTemplate.exchange("http://localhost:8080/api/v1/alumnos/" + alumnoId, HttpMethod.GET, httpEntity,AlumnoDTO.class);
+        ResponseEntity<AlumnoDTO> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity,AlumnoDTO.class);
         return response;
     }
 
     public ResponseEntity<?> addMateriaToAlumno(String token, AddMateriaToAlumno addMateriaToAlumno){
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
-        String url = "http://localhost:8080/api/v1/alumnos/materias";
+        String url = basePath + "/alumnos/materias";
+        System.out.println(url);
         HttpEntity<AddMateriaToAlumno> request = new HttpEntity<>(addMateriaToAlumno, headers);
         try{
             ResponseEntity<AlumnoDTO> response = restTemplate.exchange(

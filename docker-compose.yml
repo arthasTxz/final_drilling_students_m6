@@ -1,0 +1,46 @@
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  backend:
+    build:
+      context: ./backend  # Cambia si es diferente
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend  # Cambia si es diferente
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pg_data: {}  # Definición del volumen aquí
